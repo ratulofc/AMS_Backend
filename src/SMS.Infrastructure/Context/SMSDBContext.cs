@@ -30,6 +30,7 @@ namespace SMS.Infrastructure.Context
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            #region Address Fluent
             modelBuilder.Entity<Address>(entity =>
             {
                 entity.HasKey(e => e.Id);       // To set Id as a primary key
@@ -71,7 +72,9 @@ namespace SMS.Infrastructure.Context
                     .HasMaxLength(50)
                     .IsRequired(true);
             });
+            #endregion
 
+            #region AdmitCard Fluent
             modelBuilder.Entity<AdmitCard>(entity =>
             {
                 entity.HasKey(e => e.Id);       // To set Id as a primary key
@@ -88,7 +91,9 @@ namespace SMS.Infrastructure.Context
                     .HasForeignKey(d => d.ExamId)
                     .OnDelete(DeleteBehavior.ClientSetNull);
             });
+            #endregion
 
+            #region Class Fluent
             modelBuilder.Entity<Class>(entity =>
             {
                 entity.HasKey(e => e.Id);       // To set Id as a primary key
@@ -100,56 +105,154 @@ namespace SMS.Infrastructure.Context
                     .HasMaxLength(50)
                     .IsRequired(true);
 
-
+                entity.Property(e => e.Year)
+                    .HasColumnType("datetime")
+                    .IsRequired(true);          // To set column NOT NULL
 
                 entity.HasOne(d => d.Teacher)
                     .WithMany(p => p.Classes)
                     .HasForeignKey(d => d.TeacherId)
                     .OnDelete(DeleteBehavior.ClientSetNull);
             });
+            #endregion
 
+            #region ClassStudent Fluent
             modelBuilder.Entity<ClassStudent>(entity =>
             {
+                entity.HasKey(e => e.Id);       // To set Id as a primary key
+                entity.Property(e => e.Id)
+                    .ValueGeneratedOnAdd();     // To set Id auto increment
+
                 entity.HasOne(d => d.Class)
                     .WithMany(p => p.ClassStudents)
                     .HasForeignKey(d => d.ClassId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("ClassStudents_fk1");
+                    .OnDelete(DeleteBehavior.ClientSetNull);
 
                 entity.HasOne(d => d.Student)
                     .WithMany(p => p.ClassStudents)
                     .HasForeignKey(d => d.StudentId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("ClassStudents_fk0");
+                    .OnDelete(DeleteBehavior.ClientSetNull);
             });
+            #endregion
 
+            #region Event Fluent
             modelBuilder.Entity<Event>(entity =>
             {
+                entity.HasKey(e => e.Id);       // To set Id as a primary key
+                entity.Property(e => e.Id)
+                    .ValueGeneratedOnAdd();     // To set Id auto increment
+
+                entity.Property(e => e.Name)
+                    .HasColumnType("nvarchar")  // To set column data type
+                    .HasMaxLength(50)           // To set column length
+                    .IsRequired(true);          // To set column NOT NULL
+
+                entity.Property(e => e.Description)
+                    .HasColumnType("nvarchar")  // To set column data type
+                    .HasMaxLength(100)           // To set column length
+                    .IsRequired(true);          // To set column NOT NULL
+
+                entity.Property(e => e.StartDate)
+                    .HasColumnType("datetime")
+                    .IsRequired(true);          // To set column NOT NULL
+
+                entity.Property(e => e.EndDate)
+                    .HasColumnType("datetime")
+                    .IsRequired(true);          // To set column NOT NULL
+
+                entity.Property(e => e.Location)
+                    .HasColumnType("nvarchar")  // To set column data type
+                    .HasMaxLength(50)           // To set column length
+                    .IsRequired(true);          // To set column NOT NULL
+
                 entity.HasOne(d => d.Teacher)
                     .WithMany(p => p.Events)
                     .HasForeignKey(d => d.TeacherId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("Event_fk6");
+                    .OnDelete(DeleteBehavior.ClientSetNull);
             });
+            #endregion
 
+            #region Exam Fluent
+            modelBuilder.Entity<Exam>(entity =>
+            {
+                entity.HasKey(e => e.Id);       // To set Id as a primary key
+                entity.Property(e => e.Id)
+                    .ValueGeneratedOnAdd();     // To set Id auto increment
+
+                entity.Property(e => e.Date)
+                    .HasColumnType("datetime")
+                    .IsRequired(true);
+
+                entity.Property(e => e.Name)
+                    .HasColumnType("nvarchar")
+                    .HasMaxLength(50)
+                    .IsRequired(true);
+
+                entity.Property(e => e.Type)
+                    .HasColumnType("nvarchar")
+                    .HasMaxLength(20)
+                    .IsRequired(true);
+            });
+            #endregion
+
+            #region Fee Fluent
             modelBuilder.Entity<Fee>(entity =>
             {
+                entity.HasKey(e => e.Id);       // To set Id as a primary key
+                entity.Property(e => e.Id)
+                    .ValueGeneratedOnAdd();     // To set Id auto increment
+
+                entity.Property(e => e.FeeAmount)
+                    .HasColumnType("decimal(18, 0)");
+
+                entity.Property(e => e.DueDate)
+                    .HasColumnType("datetime")
+                    .IsRequired(true);          // To set column NOT NULL
+
+                entity.Property(e => e.PaidDate)
+                    .HasColumnType("datetime")
+                    .IsRequired(true);          // To set column NOT NULL
+
                 entity.HasOne(d => d.Student)
                     .WithMany(p => p.Fees)
                     .HasForeignKey(d => d.StudentId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("Fees_fk4");
+                    .OnDelete(DeleteBehavior.ClientSetNull);
             });
+            #endregion
 
+            #region Notice Fluent
             modelBuilder.Entity<Notice>(entity =>
             {
+                entity.HasKey(e => e.Id);       // To set Id as a primary key
+                entity.Property(e => e.Id)
+                    .ValueGeneratedOnAdd();     // To set Id auto increment
+
+                entity.Property(e => e.Title)
+                    .HasColumnType("nvarchar")  // To set column data type
+                    .HasMaxLength(50)           // To set column length
+                    .IsRequired(true);          // To set column NOT NULL
+
+                entity.Property(e => e.Description)
+                    .HasColumnType("nvarchar")  // To set column data type
+                    .HasMaxLength(100)           // To set column length
+                    .IsRequired(true);          // To set column NOT NULL
+
+                entity.Property(e => e.PostedOn)
+                    .HasColumnType("datetime")
+                    .IsRequired(true);          // To set column NOT NULL
+
+                entity.Property(e => e.ExpiryDate)
+                    .HasColumnType("datetime")
+                    .IsRequired(true);          // To set column NOT NULL
+
                 entity.HasOne(d => d.Teacher)
                     .WithMany(p => p.Notices)
                     .HasForeignKey(d => d.TeacherId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("Notices_fk5");
+                    .OnDelete(DeleteBehavior.ClientSetNull);
             });
+            #endregion
 
+            #region Parent Fluent
             modelBuilder.Entity<Parent>(entity =>
             {
                 entity.HasKey(e => e.Id);       // To set Id as a primary key
@@ -191,30 +294,38 @@ namespace SMS.Infrastructure.Context
                 entity.Property(e => e.LastLoginDate)
                     .HasColumnType("datetime")
                     .IsRequired(true);          // To set column NOT NULL
-
             });
+            #endregion
 
+            #region Result Fluent
             modelBuilder.Entity<Result>(entity =>
             {
+                entity.HasKey(e => e.Id);       // To set Id as a primary key
+                entity.Property(e => e.Id)
+                    .ValueGeneratedOnAdd();     // To set Id auto increment
+
                 entity.HasOne(d => d.Exam)
                     .WithMany(p => p.Results)
                     .HasForeignKey(d => d.ExamId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("Results_fk1");
+                    .OnDelete(DeleteBehavior.ClientSetNull);
 
                 entity.HasOne(d => d.Student)
                     .WithMany(p => p.Results)
                     .HasForeignKey(d => d.StudentId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("Results_fk2");
+                    .OnDelete(DeleteBehavior.ClientSetNull);
 
                 entity.HasOne(d => d.Subject)
                     .WithMany(p => p.Results)
                     .HasForeignKey(d => d.SubjectId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("Results_fk3");
-            });
+                    .OnDelete(DeleteBehavior.ClientSetNull);
 
+                entity.Property(e => e.Marks)
+                    .HasColumnType("decimal(18, 0)");
+
+            });
+            #endregion
+
+            #region Student Fluent
             modelBuilder.Entity<Student>(entity =>
             {
                 entity.HasKey(e => e.Id);       // To set Id as a primary key
@@ -276,7 +387,32 @@ namespace SMS.Infrastructure.Context
                     .HasForeignKey(d => d.ParentId)   // This way we can set Foregin key
                     .OnDelete(DeleteBehavior.ClientSetNull);
             });
+            #endregion
 
+            #region Subject Fluent
+            modelBuilder.Entity<Subject>(entity =>
+            {
+                entity.HasKey(e => e.Id);       // To set Id as a primary key
+                entity.Property(e => e.Id)
+                    .ValueGeneratedOnAdd();     // To set Id auto increment
+
+                entity.Property(e => e.SubjectName)
+                    .HasColumnType("nvarchar")  // To set column data type
+                    .HasMaxLength(50)          // To set column length
+                    .IsRequired(true);          // To set column NOT NULL
+
+                entity.Property(e => e.Description)
+                    .HasColumnType("nvarchar")  // To set column data type
+                    .HasMaxLength(255)          // To set column length
+                    .IsRequired(true);          // To set column NOT NULL
+
+                entity.Property(e => e.Grade)
+                    .HasColumnType("int")
+                    .IsRequired(true);          // To set column NOT NULL
+            });
+            #endregion
+
+            #region Teacher Fluent
             modelBuilder.Entity<Teacher>(entity =>
             {
                 entity.HasOne(d => d.Address)
@@ -291,7 +427,9 @@ namespace SMS.Infrastructure.Context
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("Teachers_fk12");
             });
+            #endregion
 
+            #region TimeTable Fluent
             modelBuilder.Entity<TimeTable>(entity =>
             {
                 entity.HasOne(d => d.Class)
@@ -306,6 +444,7 @@ namespace SMS.Infrastructure.Context
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("TimeTables_fk4");
             });
+            #endregion
 
             OnModelCreatingPartial(modelBuilder);
         }

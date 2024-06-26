@@ -19,12 +19,8 @@ namespace SMS.Infrastructure.Entities
         public DateTime Year { get; set; }
         public int TeacherId { get; set; }
 
-        [ForeignKey("TeacherId")]
-        [InverseProperty("Classes")]
         public virtual Teacher Teacher { get; set; } = null!;
-        [InverseProperty("Class")]
         public virtual ICollection<ClassStudent> ClassStudents { get; set; }
-        [InverseProperty("Class")]
         public virtual ICollection<TimeTable> TimeTables { get; set; }
     }
 }

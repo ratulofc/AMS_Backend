@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SMS.Infrastructure.Context;
 
@@ -11,9 +12,10 @@ using SMS.Infrastructure.Context;
 namespace SMS.Infrastructure.Migrations
 {
     [DbContext(typeof(SMSDBContext))]
-    partial class SMSDBContextModelSnapshot : ModelSnapshot
+    [Migration("20240626095635_InitialCreate2")]
+    partial class InitialCreate2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -157,7 +159,7 @@ namespace SMS.Infrastructure.Migrations
                         .HasColumnType("nvarchar(100)");
 
                     b.Property<DateTime>("EndDate")
-                        .HasColumnType("datetime");
+                        .HasColumnType("date");
 
                     b.Property<string>("Location")
                         .IsRequired()
@@ -170,7 +172,7 @@ namespace SMS.Infrastructure.Migrations
                         .HasColumnType("nvarchar(50)");
 
                     b.Property<DateTime>("StartDate")
-                        .HasColumnType("datetime");
+                        .HasColumnType("date");
 
                     b.Property<int>("TeacherId")
                         .HasColumnType("int");
@@ -179,7 +181,10 @@ namespace SMS.Infrastructure.Migrations
 
                     b.HasIndex("TeacherId");
 
-                    b.ToTable("Events");
+                    b.HasIndex(new[] { "Id" }, "UQ__Event__3214EC061BA3B7EC")
+                        .IsUnique();
+
+                    b.ToTable("Event");
                 });
 
             modelBuilder.Entity("SMS.Infrastructure.Entities.Exam", b =>
@@ -191,7 +196,7 @@ namespace SMS.Infrastructure.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<DateTime>("Date")
-                        .HasColumnType("datetime");
+                        .HasColumnType("date");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -205,6 +210,9 @@ namespace SMS.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex(new[] { "Id" }, "UQ__Exams__3214EC06CFADBB48")
+                        .IsUnique();
+
                     b.ToTable("Exams");
                 });
 
@@ -217,14 +225,13 @@ namespace SMS.Infrastructure.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<DateTime>("DueDate")
-                        .HasColumnType("datetime");
+                        .HasColumnType("date");
 
                     b.Property<decimal>("FeeAmount")
                         .HasColumnType("decimal(18,0)");
 
                     b.Property<DateTime?>("PaidDate")
-                        .IsRequired()
-                        .HasColumnType("datetime");
+                        .HasColumnType("date");
 
                     b.Property<int>("StudentId")
                         .HasColumnType("int");
@@ -232,6 +239,9 @@ namespace SMS.Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("StudentId");
+
+                    b.HasIndex(new[] { "Id" }, "UQ__Fees__3214EC06FB5FEE88")
+                        .IsUnique();
 
                     b.ToTable("Fees");
                 });
@@ -266,6 +276,9 @@ namespace SMS.Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("TeacherId");
+
+                    b.HasIndex(new[] { "Id" }, "UQ__Notices__3214EC0685C23017")
+                        .IsUnique();
 
                     b.ToTable("Notices");
                 });
@@ -347,6 +360,9 @@ namespace SMS.Infrastructure.Migrations
                     b.HasIndex("StudentId");
 
                     b.HasIndex("SubjectId");
+
+                    b.HasIndex(new[] { "Id" }, "UQ__Results__3214EC068B71D55B")
+                        .IsUnique();
 
                     b.ToTable("Results");
                 });
@@ -450,6 +466,9 @@ namespace SMS.Infrastructure.Migrations
                         .HasColumnType("nvarchar(50)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex(new[] { "Id" }, "UQ__Subjects__3214EC062E9D17EA")
+                        .IsUnique();
 
                     b.ToTable("Subjects");
                 });
@@ -610,7 +629,8 @@ namespace SMS.Infrastructure.Migrations
                     b.HasOne("SMS.Infrastructure.Entities.Teacher", "Teacher")
                         .WithMany("Events")
                         .HasForeignKey("TeacherId")
-                        .IsRequired();
+                        .IsRequired()
+                        .HasConstraintName("Event_fk6");
 
                     b.Navigation("Teacher");
                 });
@@ -620,7 +640,8 @@ namespace SMS.Infrastructure.Migrations
                     b.HasOne("SMS.Infrastructure.Entities.Student", "Student")
                         .WithMany("Fees")
                         .HasForeignKey("StudentId")
-                        .IsRequired();
+                        .IsRequired()
+                        .HasConstraintName("Fees_fk4");
 
                     b.Navigation("Student");
                 });
@@ -630,7 +651,8 @@ namespace SMS.Infrastructure.Migrations
                     b.HasOne("SMS.Infrastructure.Entities.Teacher", "Teacher")
                         .WithMany("Notices")
                         .HasForeignKey("TeacherId")
-                        .IsRequired();
+                        .IsRequired()
+                        .HasConstraintName("Notices_fk5");
 
                     b.Navigation("Teacher");
                 });
@@ -640,17 +662,20 @@ namespace SMS.Infrastructure.Migrations
                     b.HasOne("SMS.Infrastructure.Entities.Exam", "Exam")
                         .WithMany("Results")
                         .HasForeignKey("ExamId")
-                        .IsRequired();
+                        .IsRequired()
+                        .HasConstraintName("Results_fk1");
 
                     b.HasOne("SMS.Infrastructure.Entities.Student", "Student")
                         .WithMany("Results")
                         .HasForeignKey("StudentId")
-                        .IsRequired();
+                        .IsRequired()
+                        .HasConstraintName("Results_fk2");
 
                     b.HasOne("SMS.Infrastructure.Entities.Subject", "Subject")
                         .WithMany("Results")
                         .HasForeignKey("SubjectId")
-                        .IsRequired();
+                        .IsRequired()
+                        .HasConstraintName("Results_fk3");
 
                     b.Navigation("Exam");
 

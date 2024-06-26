@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SMS.Infrastructure.Context;
 
@@ -11,9 +12,10 @@ using SMS.Infrastructure.Context;
 namespace SMS.Infrastructure.Migrations
 {
     [DbContext(typeof(SMSDBContext))]
-    partial class SMSDBContextModelSnapshot : ModelSnapshot
+    [Migration("20240626122641_InitialCreate5")]
+    partial class InitialCreate5
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
