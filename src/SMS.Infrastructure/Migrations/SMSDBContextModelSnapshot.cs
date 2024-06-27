@@ -37,8 +37,8 @@ namespace SMS.Infrastructure.Migrations
 
                     b.Property<string>("LandMark")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("MobileNo")
                         .IsRequired()
@@ -157,7 +157,7 @@ namespace SMS.Infrastructure.Migrations
                         .HasColumnType("nvarchar(100)");
 
                     b.Property<DateTime>("EndDate")
-                        .HasColumnType("datetime");
+                        .HasColumnType("date");
 
                     b.Property<string>("Location")
                         .IsRequired()
@@ -170,7 +170,7 @@ namespace SMS.Infrastructure.Migrations
                         .HasColumnType("nvarchar(50)");
 
                     b.Property<DateTime>("StartDate")
-                        .HasColumnType("datetime");
+                        .HasColumnType("date");
 
                     b.Property<int>("TeacherId")
                         .HasColumnType("int");
@@ -191,7 +191,7 @@ namespace SMS.Infrastructure.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<DateTime>("Date")
-                        .HasColumnType("datetime");
+                        .HasColumnType("date");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -217,14 +217,13 @@ namespace SMS.Infrastructure.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<DateTime>("DueDate")
-                        .HasColumnType("datetime");
+                        .HasColumnType("date");
 
                     b.Property<decimal>("FeeAmount")
                         .HasColumnType("decimal(18,0)");
 
                     b.Property<DateTime?>("PaidDate")
-                        .IsRequired()
-                        .HasColumnType("datetime");
+                        .HasColumnType("date");
 
                     b.Property<int>("StudentId")
                         .HasColumnType("int");
@@ -308,8 +307,8 @@ namespace SMS.Infrastructure.Migrations
 
                     b.Property<string>("PhoneNo")
                         .IsRequired()
-                        .HasMaxLength(10)
-                        .HasColumnType("nvarchar(10)")
+                        .HasMaxLength(15)
+                        .HasColumnType("nvarchar(15)")
                         .IsFixedLength();
 
                     b.HasKey("Id");
@@ -368,10 +367,9 @@ namespace SMS.Infrastructure.Migrations
                         .HasColumnType("nvarchar(512)");
 
                     b.Property<DateTime>("DateOfJoin")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("datetime");
 
                     b.Property<DateTime>("Dob")
-                        .ValueGeneratedOnUpdateSometimes()
                         .HasColumnType("datetime")
                         .HasColumnName("DOB");
 
@@ -390,9 +388,7 @@ namespace SMS.Infrastructure.Migrations
                         .HasColumnType("bit");
 
                     b.Property<DateTime>("LastLoginDate")
-                        .ValueGeneratedOnUpdateSometimes()
-                        .HasColumnType("datetime")
-                        .HasColumnName("DOB");
+                        .HasColumnType("datetime");
 
                     b.Property<string>("LastName")
                         .IsRequired()
@@ -409,8 +405,8 @@ namespace SMS.Infrastructure.Migrations
 
                     b.Property<string>("PhoneNo")
                         .IsRequired()
-                        .HasMaxLength(10)
-                        .HasColumnType("nvarchar(10)")
+                        .HasMaxLength(15)
+                        .HasColumnType("nvarchar(15)")
                         .IsFixedLength();
 
                     b.Property<bool>("Status")
@@ -480,6 +476,7 @@ namespace SMS.Infrastructure.Migrations
                     b.Property<string>("Email")
                         .IsRequired()
                         .HasMaxLength(255)
+                        .IsUnicode(true)
                         .HasColumnType("nvarchar(255)");
 
                     b.Property<string>("FirstName")
@@ -503,7 +500,8 @@ namespace SMS.Infrastructure.Migrations
                     b.Property<string>("PhoneNo")
                         .IsRequired()
                         .HasMaxLength(15)
-                        .HasColumnType("nvarchar(15)");
+                        .HasColumnType("nvarchar(15)")
+                        .IsFixedLength();
 
                     b.Property<bool>("Status")
                         .HasColumnType("bit");
@@ -515,13 +513,10 @@ namespace SMS.Infrastructure.Migrations
 
                     b.HasIndex("AddressId");
 
+                    b.HasIndex("Email")
+                        .IsUnique();
+
                     b.HasIndex("SubjectId");
-
-                    b.HasIndex(new[] { "Id" }, "UQ__Teachers__3214EC06641E1C57")
-                        .IsUnique();
-
-                    b.HasIndex(new[] { "Email" }, "UQ__Teachers__A9D10534869DDFFA")
-                        .IsUnique();
 
                     b.ToTable("Teachers");
                 });
@@ -554,9 +549,6 @@ namespace SMS.Infrastructure.Migrations
                     b.HasIndex("ClassId");
 
                     b.HasIndex("SubjectId");
-
-                    b.HasIndex(new[] { "Id" }, "UQ__TimeTabl__3214EC063493981E")
-                        .IsUnique();
 
                     b.ToTable("TimeTables");
                 });
@@ -681,14 +673,12 @@ namespace SMS.Infrastructure.Migrations
                     b.HasOne("SMS.Infrastructure.Entities.Address", "Address")
                         .WithMany("Teachers")
                         .HasForeignKey("AddressId")
-                        .IsRequired()
-                        .HasConstraintName("Teachers_fk11");
+                        .IsRequired();
 
                     b.HasOne("SMS.Infrastructure.Entities.Subject", "Subject")
                         .WithMany("Teachers")
                         .HasForeignKey("SubjectId")
-                        .IsRequired()
-                        .HasConstraintName("Teachers_fk12");
+                        .IsRequired();
 
                     b.Navigation("Address");
 
@@ -700,14 +690,12 @@ namespace SMS.Infrastructure.Migrations
                     b.HasOne("SMS.Infrastructure.Entities.Class", "Class")
                         .WithMany("TimeTables")
                         .HasForeignKey("ClassId")
-                        .IsRequired()
-                        .HasConstraintName("TimeTables_fk5");
+                        .IsRequired();
 
                     b.HasOne("SMS.Infrastructure.Entities.Subject", "Subject")
                         .WithMany("TimeTables")
                         .HasForeignKey("SubjectId")
-                        .IsRequired()
-                        .HasConstraintName("TimeTables_fk4");
+                        .IsRequired();
 
                     b.Navigation("Class");
 

@@ -21,7 +21,7 @@ namespace SMS.Infrastructure.Migrations
                     State = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     Pincode = table.Column<string>(type: "nvarchar(6)", maxLength: 6, nullable: false),
                     StreetAddress = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    LandMark = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false)
+                    LandMark = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -54,7 +54,7 @@ namespace SMS.Infrastructure.Migrations
                     Email = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
                     PasswordHash = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
                     DOB = table.Column<DateTime>(type: "datetime", nullable: false),
-                    PhoneNo = table.Column<string>(type: "nvarchar(10)", fixedLength: true, maxLength: 10, nullable: false),
+                    PhoneNo = table.Column<string>(type: "nvarchar(15)", fixedLength: true, maxLength: 15, nullable: false),
                     LastLoginDate = table.Column<DateTime>(type: "datetime", nullable: false)
                 },
                 constraints: table =>
@@ -88,10 +88,11 @@ namespace SMS.Infrastructure.Migrations
                     Email = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
                     PasswordHash = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
                     DOB = table.Column<DateTime>(type: "datetime", nullable: false),
-                    PhoneNo = table.Column<string>(type: "nvarchar(10)", fixedLength: true, maxLength: 10, nullable: false),
+                    PhoneNo = table.Column<string>(type: "nvarchar(15)", fixedLength: true, maxLength: 15, nullable: false),
                     IsEmailVerified = table.Column<bool>(type: "bit", nullable: false),
-                    DateOfJoin = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    DateOfJoin = table.Column<DateTime>(type: "datetime", nullable: false),
                     Status = table.Column<bool>(type: "bit", nullable: false),
+                    LastLoginDate = table.Column<DateTime>(type: "datetime", nullable: false),
                     Avatar = table.Column<string>(type: "nvarchar(512)", maxLength: 512, nullable: false),
                     AddressId = table.Column<int>(type: "int", nullable: false),
                     ParentId = table.Column<int>(type: "int", nullable: false)
@@ -122,7 +123,7 @@ namespace SMS.Infrastructure.Migrations
                     Email = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
                     PasswordHash = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
                     DOB = table.Column<DateTime>(type: "datetime", nullable: false),
-                    PhoneNo = table.Column<string>(type: "nvarchar(15)", maxLength: 15, nullable: false),
+                    PhoneNo = table.Column<string>(type: "nvarchar(15)", fixedLength: true, maxLength: 15, nullable: false),
                     Status = table.Column<bool>(type: "bit", nullable: false),
                     DateOfJoin = table.Column<DateTime>(type: "datetime", nullable: false),
                     LastLoginDate = table.Column<DateTime>(type: "datetime", nullable: false),
@@ -134,12 +135,12 @@ namespace SMS.Infrastructure.Migrations
                 {
                     table.PrimaryKey("PK_Teachers", x => x.Id);
                     table.ForeignKey(
-                        name: "Teachers_fk11",
+                        name: "FK_Teachers_Addresses_AddressId",
                         column: x => x.AddressId,
                         principalTable: "Addresses",
                         principalColumn: "Id");
                     table.ForeignKey(
-                        name: "Teachers_fk12",
+                        name: "FK_Teachers_Subjects_SubjectId",
                         column: x => x.SubjectId,
                         principalTable: "Subjects",
                         principalColumn: "Id");
@@ -184,7 +185,7 @@ namespace SMS.Infrastructure.Migrations
                 {
                     table.PrimaryKey("PK_Fees", x => x.Id);
                     table.ForeignKey(
-                        name: "Fees_fk4",
+                        name: "FK_Fees_Students_StudentId",
                         column: x => x.StudentId,
                         principalTable: "Students",
                         principalColumn: "Id");
@@ -205,17 +206,17 @@ namespace SMS.Infrastructure.Migrations
                 {
                     table.PrimaryKey("PK_Results", x => x.Id);
                     table.ForeignKey(
-                        name: "Results_fk1",
+                        name: "FK_Results_Exams_ExamId",
                         column: x => x.ExamId,
                         principalTable: "Exams",
                         principalColumn: "Id");
                     table.ForeignKey(
-                        name: "Results_fk2",
+                        name: "FK_Results_Students_StudentId",
                         column: x => x.StudentId,
                         principalTable: "Students",
                         principalColumn: "Id");
                     table.ForeignKey(
-                        name: "Results_fk3",
+                        name: "FK_Results_Subjects_SubjectId",
                         column: x => x.SubjectId,
                         principalTable: "Subjects",
                         principalColumn: "Id");
@@ -235,14 +236,14 @@ namespace SMS.Infrastructure.Migrations
                 {
                     table.PrimaryKey("PK_Classes", x => x.Id);
                     table.ForeignKey(
-                        name: "Classes_fk3",
+                        name: "FK_Classes_Teachers_TeacherId",
                         column: x => x.TeacherId,
                         principalTable: "Teachers",
                         principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
-                name: "Event",
+                name: "Events",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -256,9 +257,9 @@ namespace SMS.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Event", x => x.Id);
+                    table.PrimaryKey("PK_Events", x => x.Id);
                     table.ForeignKey(
-                        name: "Event_fk6",
+                        name: "FK_Events_Teachers_TeacherId",
                         column: x => x.TeacherId,
                         principalTable: "Teachers",
                         principalColumn: "Id");
@@ -280,7 +281,7 @@ namespace SMS.Infrastructure.Migrations
                 {
                     table.PrimaryKey("PK_Notices", x => x.Id);
                     table.ForeignKey(
-                        name: "Notices_fk5",
+                        name: "FK_Notices_Teachers_TeacherId",
                         column: x => x.TeacherId,
                         principalTable: "Teachers",
                         principalColumn: "Id");
@@ -299,14 +300,14 @@ namespace SMS.Infrastructure.Migrations
                 {
                     table.PrimaryKey("PK_ClassStudents", x => x.Id);
                     table.ForeignKey(
-                        name: "ClassStudents_fk0",
-                        column: x => x.StudentId,
-                        principalTable: "Students",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "ClassStudents_fk1",
+                        name: "FK_ClassStudents_Classes_ClassId",
                         column: x => x.ClassId,
                         principalTable: "Classes",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_ClassStudents_Students_StudentId",
+                        column: x => x.StudentId,
+                        principalTable: "Students",
                         principalColumn: "Id");
                 });
 
@@ -326,14 +327,14 @@ namespace SMS.Infrastructure.Migrations
                 {
                     table.PrimaryKey("PK_TimeTables", x => x.Id);
                     table.ForeignKey(
-                        name: "TimeTables_fk4",
-                        column: x => x.SubjectId,
-                        principalTable: "Subjects",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "TimeTables_fk5",
+                        name: "FK_TimeTables_Classes_ClassId",
                         column: x => x.ClassId,
                         principalTable: "Classes",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_TimeTables_Subjects_SubjectId",
+                        column: x => x.SubjectId,
+                        principalTable: "Subjects",
                         principalColumn: "Id");
                 });
 
@@ -353,12 +354,6 @@ namespace SMS.Infrastructure.Migrations
                 column: "TeacherId");
 
             migrationBuilder.CreateIndex(
-                name: "UQ__Classes__3214EC0623EDF78A",
-                table: "Classes",
-                column: "Id",
-                unique: true);
-
-            migrationBuilder.CreateIndex(
                 name: "IX_ClassStudents_ClassId",
                 table: "ClassStudents",
                 column: "ClassId");
@@ -369,27 +364,9 @@ namespace SMS.Infrastructure.Migrations
                 column: "StudentId");
 
             migrationBuilder.CreateIndex(
-                name: "UQ__ClassStu__3214EC06925FBE88",
-                table: "ClassStudents",
-                column: "Id",
-                unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Event_TeacherId",
-                table: "Event",
+                name: "IX_Events_TeacherId",
+                table: "Events",
                 column: "TeacherId");
-
-            migrationBuilder.CreateIndex(
-                name: "UQ__Event__3214EC061BA3B7EC",
-                table: "Event",
-                column: "Id",
-                unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "UQ__Exams__3214EC06CFADBB48",
-                table: "Exams",
-                column: "Id",
-                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Fees_StudentId",
@@ -397,21 +374,9 @@ namespace SMS.Infrastructure.Migrations
                 column: "StudentId");
 
             migrationBuilder.CreateIndex(
-                name: "UQ__Fees__3214EC06FB5FEE88",
-                table: "Fees",
-                column: "Id",
-                unique: true);
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Notices_TeacherId",
                 table: "Notices",
                 column: "TeacherId");
-
-            migrationBuilder.CreateIndex(
-                name: "UQ__Notices__3214EC0685C23017",
-                table: "Notices",
-                column: "Id",
-                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Parents_Email",
@@ -435,12 +400,6 @@ namespace SMS.Infrastructure.Migrations
                 column: "SubjectId");
 
             migrationBuilder.CreateIndex(
-                name: "UQ__Results__3214EC068B71D55B",
-                table: "Results",
-                column: "Id",
-                unique: true);
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Students_AddressId",
                 table: "Students",
                 column: "AddressId");
@@ -457,32 +416,20 @@ namespace SMS.Infrastructure.Migrations
                 column: "ParentId");
 
             migrationBuilder.CreateIndex(
-                name: "UQ__Subjects__3214EC062E9D17EA",
-                table: "Subjects",
-                column: "Id",
-                unique: true);
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Teachers_AddressId",
                 table: "Teachers",
                 column: "AddressId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Teachers_SubjectId",
-                table: "Teachers",
-                column: "SubjectId");
-
-            migrationBuilder.CreateIndex(
-                name: "UQ__Teachers__3214EC06641E1C57",
-                table: "Teachers",
-                column: "Id",
-                unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "UQ__Teachers__A9D10534869DDFFA",
+                name: "IX_Teachers_Email",
                 table: "Teachers",
                 column: "Email",
                 unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Teachers_SubjectId",
+                table: "Teachers",
+                column: "SubjectId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_TimeTables_ClassId",
@@ -493,12 +440,6 @@ namespace SMS.Infrastructure.Migrations
                 name: "IX_TimeTables_SubjectId",
                 table: "TimeTables",
                 column: "SubjectId");
-
-            migrationBuilder.CreateIndex(
-                name: "UQ__TimeTabl__3214EC063493981E",
-                table: "TimeTables",
-                column: "Id",
-                unique: true);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -510,7 +451,7 @@ namespace SMS.Infrastructure.Migrations
                 name: "ClassStudents");
 
             migrationBuilder.DropTable(
-                name: "Event");
+                name: "Events");
 
             migrationBuilder.DropTable(
                 name: "Fees");

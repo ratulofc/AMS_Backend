@@ -16,7 +16,6 @@ namespace SMS.Infrastructure.Entities
             Results = new HashSet<Result>();
         }
 
-        [Key]
         public int Id { get; set; }
         public string FirstName { get; set; } = null!;
         public string LastName { get; set; } = null!;

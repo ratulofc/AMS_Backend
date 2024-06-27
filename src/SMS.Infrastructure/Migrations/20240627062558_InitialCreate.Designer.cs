@@ -12,8 +12,8 @@ using SMS.Infrastructure.Context;
 namespace SMS.Infrastructure.Migrations
 {
     [DbContext(typeof(SMSDBContext))]
-    [Migration("20240626095635_InitialCreate2")]
-    partial class InitialCreate2
+    [Migration("20240627062558_InitialCreate")]
+    partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -39,8 +39,8 @@ namespace SMS.Infrastructure.Migrations
 
                     b.Property<string>("LandMark")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("MobileNo")
                         .IsRequired()
@@ -181,10 +181,7 @@ namespace SMS.Infrastructure.Migrations
 
                     b.HasIndex("TeacherId");
 
-                    b.HasIndex(new[] { "Id" }, "UQ__Event__3214EC061BA3B7EC")
-                        .IsUnique();
-
-                    b.ToTable("Event");
+                    b.ToTable("Events");
                 });
 
             modelBuilder.Entity("SMS.Infrastructure.Entities.Exam", b =>
@@ -209,9 +206,6 @@ namespace SMS.Infrastructure.Migrations
                         .HasColumnType("nvarchar(20)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex(new[] { "Id" }, "UQ__Exams__3214EC06CFADBB48")
-                        .IsUnique();
 
                     b.ToTable("Exams");
                 });
@@ -239,9 +233,6 @@ namespace SMS.Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("StudentId");
-
-                    b.HasIndex(new[] { "Id" }, "UQ__Fees__3214EC06FB5FEE88")
-                        .IsUnique();
 
                     b.ToTable("Fees");
                 });
@@ -276,9 +267,6 @@ namespace SMS.Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("TeacherId");
-
-                    b.HasIndex(new[] { "Id" }, "UQ__Notices__3214EC0685C23017")
-                        .IsUnique();
 
                     b.ToTable("Notices");
                 });
@@ -321,8 +309,8 @@ namespace SMS.Infrastructure.Migrations
 
                     b.Property<string>("PhoneNo")
                         .IsRequired()
-                        .HasMaxLength(10)
-                        .HasColumnType("nvarchar(10)")
+                        .HasMaxLength(15)
+                        .HasColumnType("nvarchar(15)")
                         .IsFixedLength();
 
                     b.HasKey("Id");
@@ -361,9 +349,6 @@ namespace SMS.Infrastructure.Migrations
 
                     b.HasIndex("SubjectId");
 
-                    b.HasIndex(new[] { "Id" }, "UQ__Results__3214EC068B71D55B")
-                        .IsUnique();
-
                     b.ToTable("Results");
                 });
 
@@ -384,10 +369,9 @@ namespace SMS.Infrastructure.Migrations
                         .HasColumnType("nvarchar(512)");
 
                     b.Property<DateTime>("DateOfJoin")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("datetime");
 
                     b.Property<DateTime>("Dob")
-                        .ValueGeneratedOnUpdateSometimes()
                         .HasColumnType("datetime")
                         .HasColumnName("DOB");
 
@@ -406,9 +390,7 @@ namespace SMS.Infrastructure.Migrations
                         .HasColumnType("bit");
 
                     b.Property<DateTime>("LastLoginDate")
-                        .ValueGeneratedOnUpdateSometimes()
-                        .HasColumnType("datetime")
-                        .HasColumnName("DOB");
+                        .HasColumnType("datetime");
 
                     b.Property<string>("LastName")
                         .IsRequired()
@@ -425,8 +407,8 @@ namespace SMS.Infrastructure.Migrations
 
                     b.Property<string>("PhoneNo")
                         .IsRequired()
-                        .HasMaxLength(10)
-                        .HasColumnType("nvarchar(10)")
+                        .HasMaxLength(15)
+                        .HasColumnType("nvarchar(15)")
                         .IsFixedLength();
 
                     b.Property<bool>("Status")
@@ -467,9 +449,6 @@ namespace SMS.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex(new[] { "Id" }, "UQ__Subjects__3214EC062E9D17EA")
-                        .IsUnique();
-
                     b.ToTable("Subjects");
                 });
 
@@ -499,6 +478,7 @@ namespace SMS.Infrastructure.Migrations
                     b.Property<string>("Email")
                         .IsRequired()
                         .HasMaxLength(255)
+                        .IsUnicode(true)
                         .HasColumnType("nvarchar(255)");
 
                     b.Property<string>("FirstName")
@@ -522,7 +502,8 @@ namespace SMS.Infrastructure.Migrations
                     b.Property<string>("PhoneNo")
                         .IsRequired()
                         .HasMaxLength(15)
-                        .HasColumnType("nvarchar(15)");
+                        .HasColumnType("nvarchar(15)")
+                        .IsFixedLength();
 
                     b.Property<bool>("Status")
                         .HasColumnType("bit");
@@ -534,13 +515,10 @@ namespace SMS.Infrastructure.Migrations
 
                     b.HasIndex("AddressId");
 
+                    b.HasIndex("Email")
+                        .IsUnique();
+
                     b.HasIndex("SubjectId");
-
-                    b.HasIndex(new[] { "Id" }, "UQ__Teachers__3214EC06641E1C57")
-                        .IsUnique();
-
-                    b.HasIndex(new[] { "Email" }, "UQ__Teachers__A9D10534869DDFFA")
-                        .IsUnique();
 
                     b.ToTable("Teachers");
                 });
@@ -573,9 +551,6 @@ namespace SMS.Infrastructure.Migrations
                     b.HasIndex("ClassId");
 
                     b.HasIndex("SubjectId");
-
-                    b.HasIndex(new[] { "Id" }, "UQ__TimeTabl__3214EC063493981E")
-                        .IsUnique();
 
                     b.ToTable("TimeTables");
                 });
@@ -629,8 +604,7 @@ namespace SMS.Infrastructure.Migrations
                     b.HasOne("SMS.Infrastructure.Entities.Teacher", "Teacher")
                         .WithMany("Events")
                         .HasForeignKey("TeacherId")
-                        .IsRequired()
-                        .HasConstraintName("Event_fk6");
+                        .IsRequired();
 
                     b.Navigation("Teacher");
                 });
@@ -640,8 +614,7 @@ namespace SMS.Infrastructure.Migrations
                     b.HasOne("SMS.Infrastructure.Entities.Student", "Student")
                         .WithMany("Fees")
                         .HasForeignKey("StudentId")
-                        .IsRequired()
-                        .HasConstraintName("Fees_fk4");
+                        .IsRequired();
 
                     b.Navigation("Student");
                 });
@@ -651,8 +624,7 @@ namespace SMS.Infrastructure.Migrations
                     b.HasOne("SMS.Infrastructure.Entities.Teacher", "Teacher")
                         .WithMany("Notices")
                         .HasForeignKey("TeacherId")
-                        .IsRequired()
-                        .HasConstraintName("Notices_fk5");
+                        .IsRequired();
 
                     b.Navigation("Teacher");
                 });
@@ -662,20 +634,17 @@ namespace SMS.Infrastructure.Migrations
                     b.HasOne("SMS.Infrastructure.Entities.Exam", "Exam")
                         .WithMany("Results")
                         .HasForeignKey("ExamId")
-                        .IsRequired()
-                        .HasConstraintName("Results_fk1");
+                        .IsRequired();
 
                     b.HasOne("SMS.Infrastructure.Entities.Student", "Student")
                         .WithMany("Results")
                         .HasForeignKey("StudentId")
-                        .IsRequired()
-                        .HasConstraintName("Results_fk2");
+                        .IsRequired();
 
                     b.HasOne("SMS.Infrastructure.Entities.Subject", "Subject")
                         .WithMany("Results")
                         .HasForeignKey("SubjectId")
-                        .IsRequired()
-                        .HasConstraintName("Results_fk3");
+                        .IsRequired();
 
                     b.Navigation("Exam");
 
@@ -706,14 +675,12 @@ namespace SMS.Infrastructure.Migrations
                     b.HasOne("SMS.Infrastructure.Entities.Address", "Address")
                         .WithMany("Teachers")
                         .HasForeignKey("AddressId")
-                        .IsRequired()
-                        .HasConstraintName("Teachers_fk11");
+                        .IsRequired();
 
                     b.HasOne("SMS.Infrastructure.Entities.Subject", "Subject")
                         .WithMany("Teachers")
                         .HasForeignKey("SubjectId")
-                        .IsRequired()
-                        .HasConstraintName("Teachers_fk12");
+                        .IsRequired();
 
                     b.Navigation("Address");
 
@@ -725,14 +692,12 @@ namespace SMS.Infrastructure.Migrations
                     b.HasOne("SMS.Infrastructure.Entities.Class", "Class")
                         .WithMany("TimeTables")
                         .HasForeignKey("ClassId")
-                        .IsRequired()
-                        .HasConstraintName("TimeTables_fk5");
+                        .IsRequired();
 
                     b.HasOne("SMS.Infrastructure.Entities.Subject", "Subject")
                         .WithMany("TimeTables")
                         .HasForeignKey("SubjectId")
-                        .IsRequired()
-                        .HasConstraintName("TimeTables_fk4");
+                        .IsRequired();
 
                     b.Navigation("Class");
 

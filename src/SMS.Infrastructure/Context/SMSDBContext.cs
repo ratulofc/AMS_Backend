@@ -2,6 +2,7 @@
 using SMS.Infrastructure.Entities;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -69,7 +70,7 @@ namespace SMS.Infrastructure.Context
 
                 entity.Property(e => e.LandMark)
                     .HasColumnType("nvarchar")
-                    .HasMaxLength(50)
+                    .HasMaxLength(100)
                     .IsRequired(true);
             });
             #endregion
@@ -153,11 +154,11 @@ namespace SMS.Infrastructure.Context
                     .IsRequired(true);          // To set column NOT NULL
 
                 entity.Property(e => e.StartDate)
-                    .HasColumnType("datetime")
+                    .HasColumnType("date")
                     .IsRequired(true);          // To set column NOT NULL
 
                 entity.Property(e => e.EndDate)
-                    .HasColumnType("datetime")
+                    .HasColumnType("date")
                     .IsRequired(true);          // To set column NOT NULL
 
                 entity.Property(e => e.Location)
@@ -180,7 +181,7 @@ namespace SMS.Infrastructure.Context
                     .ValueGeneratedOnAdd();     // To set Id auto increment
 
                 entity.Property(e => e.Date)
-                    .HasColumnType("datetime")
+                    .HasColumnType("date")
                     .IsRequired(true);
 
                 entity.Property(e => e.Name)
@@ -206,12 +207,12 @@ namespace SMS.Infrastructure.Context
                     .HasColumnType("decimal(18, 0)");
 
                 entity.Property(e => e.DueDate)
-                    .HasColumnType("datetime")
+                    .HasColumnType("date")
                     .IsRequired(true);          // To set column NOT NULL
 
                 entity.Property(e => e.PaidDate)
-                    .HasColumnType("datetime")
-                    .IsRequired(true);          // To set column NOT NULL
+                    .HasColumnType("date")
+                    .IsRequired(false);          // To set column NULL
 
                 entity.HasOne(d => d.Student)
                     .WithMany(p => p.Fees)
@@ -288,7 +289,7 @@ namespace SMS.Infrastructure.Context
 
                 entity.Property(e => e.PhoneNo)
                     .HasColumnType("nvarchar")  // To set column data type
-                    .HasMaxLength(10)           // To set column length
+                    .HasMaxLength(15)           // To set column length
                     .IsFixedLength();           // To ensure that the length of property is fixed
 
                 entity.Property(e => e.LastLoginDate)
@@ -361,15 +362,21 @@ namespace SMS.Infrastructure.Context
 
                 entity.Property(e => e.PhoneNo)
                     .HasColumnType("nvarchar")  // To set column data type
-                    .HasMaxLength(10)           // To set column length
+                    .HasMaxLength(15)           // To set column length
                     .IsFixedLength();           // To ensure that the length of property is fixed
+
+                entity.Property(e => e.IsEmailVerified)
+                    .IsRequired(true);          // To set column NOT NULL
+
+                entity.Property(e => e.DateOfJoin)
+                    .HasColumnType("datetime")
+                    .IsRequired(true);          // To set column NOT NULL
 
                 entity.Property(e => e.Status)
                     .IsRequired(true);          // To set column NOT NULL
 
                 entity.Property(e => e.LastLoginDate)
                     .HasColumnType("datetime")
-                    .HasColumnName("DOB")       // To set column name as DOB
                     .IsRequired(true);          // To set column NOT NULL
 
                 entity.Property(e => e.Avatar)
@@ -415,34 +422,98 @@ namespace SMS.Infrastructure.Context
             #region Teacher Fluent
             modelBuilder.Entity<Teacher>(entity =>
             {
+                entity.HasKey(e => e.Id);       // To set Id as a primary key
+                entity.Property(e => e.Id)
+                    .ValueGeneratedOnAdd();     // To set Id auto increment
+
+                entity.Property(e => e.FirstName)
+                    .HasColumnType("nvarchar")  // To set column data type
+                    .HasMaxLength(50)           // To set column length
+                    .IsRequired(true);          // To set column NOT NULL
+
+                entity.Property(e => e.LastName)
+                    .HasColumnType("nvarchar")  // To set column data type
+                    .HasMaxLength(50)           // To set column length
+                    .IsRequired(true);          // To set column NOT NULL
+
+                entity.Property(e => e.Email)
+                    .IsUnicode(true)            // Mapped to nvarchar (It can store nvarchar data)
+                    .IsRequired(true)
+                    .HasMaxLength(255);
+                entity.HasIndex(e => e.Email)   // To ensure that email property will accept
+                    .IsUnique(true);            // To ensure all email property will unique
+
+                entity.Property(e => e.PasswordHash)
+                    .HasColumnType("nvarchar")  // To set column data type
+                    .HasMaxLength(255)          // To set column length
+                    .IsRequired(true);          // To set column NOT NULL
+
+                entity.Property(e => e.Dob)
+                    .HasColumnType("datetime")
+                    .HasColumnName("DOB")       // To set column name as DOB
+                    .IsRequired(true);          // To set column NOT NULL
+
+                entity.Property(e => e.PhoneNo)
+                    .HasColumnType("nvarchar")  // To set column data type
+                    .HasMaxLength(15)           // To set column length
+                    .IsFixedLength();           // To ensure that the length of property is fixed
+
+                entity.Property(e => e.Status)
+                    .IsRequired(true);          // To set column NOT NULL
+
+                entity.Property(e => e.DateOfJoin)
+                    .HasColumnType("datetime")
+                    .IsRequired(true);          // To set column NOT NULL
+
+                entity.Property(e => e.LastLoginDate)
+                    .HasColumnType("datetime")
+                    .IsRequired(true);          // To set column NOT NULL
+
+                entity.Property(e => e.Avatar)
+                    .HasColumnType("nvarchar")  // To set column data type
+                    .HasMaxLength(512)          // To set column length
+                    .IsRequired(true);          // To set column NOT NULL
+
                 entity.HasOne(d => d.Address)
                     .WithMany(p => p.Teachers)
                     .HasForeignKey(d => d.AddressId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("Teachers_fk11");
+                    .OnDelete(DeleteBehavior.ClientSetNull);
 
                 entity.HasOne(d => d.Subject)
                     .WithMany(p => p.Teachers)
                     .HasForeignKey(d => d.SubjectId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("Teachers_fk12");
+                    .OnDelete(DeleteBehavior.ClientSetNull);
             });
             #endregion
 
             #region TimeTable Fluent
             modelBuilder.Entity<TimeTable>(entity =>
             {
+                entity.HasKey(e => e.Id);       // To set Id as a primary key
+                entity.Property(e => e.Id)
+                    .ValueGeneratedOnAdd();     // To set Id auto increment
+
+                entity.Property(e => e.Date)
+                    .HasColumnType("datetime")
+                    .IsRequired(true);          // To set column NOT NULL
+
+                entity.Property(e => e.StartTime)
+                    .HasColumnType("time")
+                    .IsRequired(true);
+
+                entity.Property(e => e.EndTime)
+                    .HasColumnType("time")
+                    .IsRequired(true);
+
                 entity.HasOne(d => d.Class)
                     .WithMany(p => p.TimeTables)
                     .HasForeignKey(d => d.ClassId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("TimeTables_fk5");
+                    .OnDelete(DeleteBehavior.ClientSetNull);
 
                 entity.HasOne(d => d.Subject)
                     .WithMany(p => p.TimeTables)
                     .HasForeignKey(d => d.SubjectId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("TimeTables_fk4");
+                    .OnDelete(DeleteBehavior.ClientSetNull);
             });
             #endregion
 
