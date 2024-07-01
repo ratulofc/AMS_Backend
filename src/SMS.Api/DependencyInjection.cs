@@ -1,4 +1,9 @@
-﻿namespace SMS.Api
+﻿using SMS.Core.Interfaces.Repositories;
+using SMS.Core.Interfaces.Services;
+using SMS.Core.Services;
+using SMS.Infrastructure.Repositories;
+
+namespace SMS.Api
 {
     internal static class DependencyInjection
     {
@@ -8,8 +13,10 @@
             {
                 throw new ArgumentNullException(nameof(services));
             }
+            services.AddScoped<IRepositoryWrapper, RepositoryWrapper>();
 
 
+            services.AddScoped<IParentService, ParentService>();
             return services;
         }
     }

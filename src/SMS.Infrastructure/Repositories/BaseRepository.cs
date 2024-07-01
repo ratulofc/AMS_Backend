@@ -11,9 +11,9 @@ namespace SMS.Infrastructure.Repositories
         private readonly SMSDBContext smsDBContext;
         private readonly DbSet<TEntity> dbSet;
         private readonly IMapper mapper;
-        public BaseRepository(SMSDBContext storeDBContext, IMapper mapper)
+        public BaseRepository(SMSDBContext smsDBContext, IMapper mapper)
         {
-            this.smsDBContext = storeDBContext ?? throw new ArgumentNullException(nameof(storeDBContext));
+            this.smsDBContext = smsDBContext ?? throw new ArgumentNullException(nameof(smsDBContext));
             this.dbSet = this.smsDBContext.Set<TEntity>();
             this.mapper = mapper;
         }

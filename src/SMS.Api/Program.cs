@@ -14,6 +14,8 @@ builder.Services.ConfigureCors();
 builder.Services.ConfigureDependencyInjection();
 // Configure DBContext
 builder.ConfigureDBContext();
+// Configure AutoMapper
+builder.Services.AddAutoMapper(typeof(Program).Assembly);
 
 var app = builder.Build();
 
