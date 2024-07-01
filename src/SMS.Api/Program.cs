@@ -1,18 +1,19 @@
-using Microsoft.EntityFrameworkCore;
-using SMS.Infrastructure.Context;
+using SMS.Api;
 
 var builder = WebApplication.CreateBuilder(args);
-
 // Add services to the container.
-
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
 
-builder.Services.AddDbContext<SMSDBContext>(opt =>
-    opt.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConStr"))
-);
+// Configure Swagger
+builder.Services.AddSwaggerGen(); // Need to change swagger config later
+// Configure CORS
+builder.Services.ConfigureCors();
+// Configure Dependency Injection
+builder.Services.ConfigureDependencyInjection();
+// Configure DBContext
+builder.ConfigureDBContext();
 
 var app = builder.Build();
 

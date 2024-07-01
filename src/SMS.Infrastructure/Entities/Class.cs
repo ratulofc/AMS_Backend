@@ -15,11 +15,11 @@ namespace SMS.Infrastructure.Entities
         }
 
         public int Id { get; set; }
-        public string Section { get; set; } = null!;
+        public string Name { get; set; } = null!;
         public DateTime Year { get; set; }
-        public int TeacherId { get; set; }
+        public int? TeacherId { get; set; }
 
-        public virtual Teacher Teacher { get; set; } = null!;
+        public virtual Teacher? Teacher { get; set; }
         public virtual ICollection<ClassStudent> ClassStudents { get; set; }
         public virtual ICollection<TimeTable> TimeTables { get; set; }
     }

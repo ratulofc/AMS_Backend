@@ -228,9 +228,9 @@ namespace SMS.Infrastructure.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Section = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    Year = table.Column<DateTime>(type: "datetime", nullable: false),
-                    TeacherId = table.Column<int>(type: "int", nullable: false)
+                    Name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    Year = table.Column<DateTime>(type: "date", nullable: false),
+                    TeacherId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -336,6 +336,27 @@ namespace SMS.Infrastructure.Migrations
                         column: x => x.SubjectId,
                         principalTable: "Subjects",
                         principalColumn: "Id");
+                });
+
+            migrationBuilder.InsertData(
+                table: "Classes",
+                columns: new[] { "Id", "Name", "TeacherId", "Year" },
+                values: new object[,]
+                {
+                    { 1, "Class_1", null, new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) },
+                    { 2, "Class_2", null, new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) },
+                    { 3, "Class_3", null, new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Subjects",
+                columns: new[] { "Id", "Description", "Grade", "SubjectName" },
+                values: new object[,]
+                {
+                    { 1, "This is a english subject", 100, "English" },
+                    { 2, "This is a Physics subject", 100, "Physics" },
+                    { 3, "This is a Hindi subject", 100, "Hindi" },
+                    { 4, "This is a Geography subject", 100, "Geography" }
                 });
 
             migrationBuilder.CreateIndex(

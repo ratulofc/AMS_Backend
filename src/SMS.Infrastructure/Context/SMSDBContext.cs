@@ -101,18 +101,19 @@ namespace SMS.Infrastructure.Context
                 entity.Property(e => e.Id)
                     .ValueGeneratedOnAdd();     // To set Id auto increment
 
-                entity.Property(e => e.Section)
+                entity.Property(e => e.Name)
                     .HasColumnType("nvarchar")
                     .HasMaxLength(50)
                     .IsRequired(true);
 
                 entity.Property(e => e.Year)
-                    .HasColumnType("datetime")
+                    .HasColumnType("date")
                     .IsRequired(true);          // To set column NOT NULL
 
                 entity.HasOne(d => d.Teacher)
                     .WithMany(p => p.Classes)
                     .HasForeignKey(d => d.TeacherId)
+                    .IsRequired(false)
                     .OnDelete(DeleteBehavior.ClientSetNull);
             });
             #endregion
@@ -517,8 +518,19 @@ namespace SMS.Infrastructure.Context
             });
             #endregion
 
+            SeedTheData(modelBuilder);  // Call SeedTheData from bellow
             OnModelCreatingPartial(modelBuilder);
         }
+
+        #region SEED THE INITIAL DATA
+        private void SeedTheData(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Class>()
+                .HasData(SeedingInitialData.GetClasses());
+            modelBuilder.Entity<Subject>()
+                .HasData(SeedingInitialData.GetSubjects());
+        }
+        #endregion
         partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
     }
 }

@@ -102,22 +102,42 @@ namespace SMS.Infrastructure.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<string>("Section")
+                    b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<int>("TeacherId")
+                    b.Property<int?>("TeacherId")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("Year")
-                        .HasColumnType("datetime");
+                        .HasColumnType("date");
 
                     b.HasKey("Id");
 
                     b.HasIndex("TeacherId");
 
                     b.ToTable("Classes");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Name = "Class_1",
+                            Year = new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Name = "Class_2",
+                            Year = new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Name = "Class_3",
+                            Year = new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        });
                 });
 
             modelBuilder.Entity("SMS.Infrastructure.Entities.ClassStudent", b =>
@@ -448,6 +468,36 @@ namespace SMS.Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Subjects");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Description = "This is a english subject",
+                            Grade = 100,
+                            SubjectName = "English"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Description = "This is a Physics subject",
+                            Grade = 100,
+                            SubjectName = "Physics"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Description = "This is a Hindi subject",
+                            Grade = 100,
+                            SubjectName = "Hindi"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Description = "This is a Geography subject",
+                            Grade = 100,
+                            SubjectName = "Geography"
+                        });
                 });
 
             modelBuilder.Entity("SMS.Infrastructure.Entities.Teacher", b =>
@@ -574,8 +624,7 @@ namespace SMS.Infrastructure.Migrations
                 {
                     b.HasOne("SMS.Infrastructure.Entities.Teacher", "Teacher")
                         .WithMany("Classes")
-                        .HasForeignKey("TeacherId")
-                        .IsRequired();
+                        .HasForeignKey("TeacherId");
 
                     b.Navigation("Teacher");
                 });
